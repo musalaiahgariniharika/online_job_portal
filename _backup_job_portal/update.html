@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Job - Online Job Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- STICKY NAVBAR -->
+  <nav class="navbar-sticky">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <span>Job<span class="brand-highlight">Portal</span></span>
+      </a>
+
+      <button class="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="list.html">Jobs</a></li>
+        <li><a href="listOne.html">Search Job</a></li>
+        <li><a href="insert.html">Add Job</a></li>
+        <li><a href="update.html" class="active">Update Job</a></li>
+        <li><a href="delete.html">Delete Job</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE BANNER WITH EDITING JOB ILLUSTRATION -->
+  <header class="page-banner">
+    <div class="page-banner-container">
+      <div class="page-banner-content">
+        <h1>Update Job Opening Details</h1>
+        <p>Modify requirements, compensation, interview schedules, or post counts for existing openings.</p>
+      </div>
+
+      <!-- EDITING JOB ILLUSTRATION (PURE SVG) -->
+      <svg class="page-banner-illustration" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tablet / Document -->
+        <rect x="35" y="20" width="85" height="105" rx="8" fill="#1E293B" stroke="#60A5FA" stroke-width="2"/>
+        <!-- Document lines -->
+        <line x1="48" y1="42" x2="80" y2="42" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="48" y1="56" x2="105" y2="56" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+        <line x1="48" y1="68" x2="98" y2="68" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+        <line x1="48" y1="80" x2="102" y2="80" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+        <line x1="48" y1="92" x2="75" y2="92" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+        <!-- Stylus / Pencil -->
+        <polygon points="120,45 130,35 140,45 130,55" fill="#F59E0B"/>
+        <polygon points="105,80 120,45 130,55 115,90" fill="#3B82F6"/>
+        <polygon points="105,80 100,95 115,90" fill="#CBD5E1"/>
+        <circle cx="102" cy="93" r="1.5" fill="#0F172A"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- FORM CARD CONTAINER -->
+  <main class="section-wrapper">
+    <div class="form-container-card">
+      <div class="form-header">
+        <h2>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Update Job Details
+        </h2>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Select Job ID to load data</span>
+      </div>
+
+      <div class="form-grid">
+        <!-- 1. Job ID Dropdown (ONLY Job IDs) -->
+        <div class="form-group form-group-full">
+          <label class="form-label" for="jobid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            Select Job ID to Update
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <select id="jobid" onchange="fetchJobDetails(this.value)">
+              <option value="">Select Job ID</option>
+            </select>
+          </div>
+          <!-- Hidden or fallback input for sno if accessed directly -->
+          <input type="hidden" id="sno">
+        </div>
+
+        <!-- 2. Job Title -->
+        <div class="form-group">
+          <label class="form-label" for="jobtitle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Job Title
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            <input type="text" id="jobtitle" placeholder="Job Title">
+          </div>
+        </div>
+
+        <!-- 3. Company -->
+        <div class="form-group">
+          <label class="form-label" for="company">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Company
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18M3 7h18M7 21V7m5 14V7m5 14V7"></path>
+            </svg>
+            <input type="text" id="company" placeholder="Company Name">
+          </div>
+        </div>
+
+        <!-- 4. Location -->
+        <div class="form-group">
+          <label class="form-label" for="location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Location
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" id="location" placeholder="City / Location">
+          </div>
+        </div>
+
+        <!-- 5. Salary -->
+        <div class="form-group">
+          <label class="form-label" for="salary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            Salary (INR / CTC)
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <input type="number" id="salary" placeholder="Salary">
+          </div>
+        </div>
+
+        <!-- 6. Skills -->
+        <div class="form-group">
+          <label class="form-label" for="skills">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            Skills Required
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <input type="text" id="skills" placeholder="Skills">
+          </div>
+        </div>
+
+        <!-- 7. Interview Date -->
+        <div class="form-group">
+          <label class="form-label" for="interviewdate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Interview Date
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <input type="date" id="interviewdate">
+          </div>
+        </div>
+
+        <!-- 8. Number of Posts -->
+        <div class="form-group">
+          <label class="form-label" for="numberofposts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+            Number of Posts
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <input type="number" id="numberofposts" placeholder="Posts Count">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button onclick="location.href='index.html'" class="btn btn-secondary">
+          Home Page
+        </button>
+        <button onclick="updateJob()" class="btn btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Update Job
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PROFESSIONAL FOOTER -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          JobPortal
+        </h3>
+        <p>Connecting top talent with leading enterprises and high-growth startups across India.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="list.html">All Jobs</a></li>
+          <li><a href="listOne.html">Search Job</a></li>
+          <li><a href="insert.html">Post a Job</a></li>
+          <li><a href="update.html">Update Job</a></li>
+          <li><a href="delete.html">Delete Job</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact & Support</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <span>support@jobportal.in</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Online Job Portal. All rights reserved.</p>
+      <p>Built with Pure HTML, CSS & JavaScript</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileNav() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("open");
+    }
+
+    // Populate Job ID dropdown with ONLY Job IDs
+    loadJobIds();
+
+    function loadJobIds() {
+      fetch("/jobs")
+        .then(response => response.json())
+        .then(jobs => {
+          const select = document.getElementById("jobid");
+          select.innerHTML = '<option value="">Select Job ID</option>';
+          jobs.forEach(job => {
+            const opt = document.createElement("option");
+            opt.value = job.jobid;
+            opt.textContent = job.jobid; // ONLY Job ID displayed!
+            select.appendChild(opt);
+          });
+        })
+        .catch(err => console.error("Error loading job IDs:", err));
+    }
+
+    function fetchJobDetails(id) {
+      if (!id) return;
+      document.getElementById("sno").value = id;
+
+      fetch("/jobs/" + id)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const job = data[0];
+            if (document.getElementById("jobtitle")) document.getElementById("jobtitle").value = job.jobtitle || "";
+            if (document.getElementById("company")) document.getElementById("company").value = job.company || "";
+            if (document.getElementById("location")) document.getElementById("location").value = job.location || "";
+            if (document.getElementById("salary")) document.getElementById("salary").value = job.salary || "";
+            if (document.getElementById("skills")) document.getElementById("skills").value = job.skills || "";
+            if (document.getElementById("interviewdate")) document.getElementById("interviewdate").value = job.interviewdate || "";
+            if (document.getElementById("numberofposts")) document.getElementById("numberofposts").value = job.numberofposts || "";
+          }
+        })
+        .catch(err => console.error("Error fetching job details:", err));
+    }
+
+    function updateJob() {
+      let jobidSelect = document.getElementById("jobid");
+      let snoInput = document.getElementById("sno");
+      let sno = (jobidSelect && jobidSelect.value) || (snoInput && snoInput.value);
+
+      if (!sno) {
+        alert("Please select a Job ID to update");
+        return;
+      }
+
+      let jobtitle = document.getElementById("jobtitle").value;
+      let company = document.getElementById("company").value;
+      let locationVal = document.getElementById("location").value;
+      let salary = document.getElementById("salary").value;
+      let skills = document.getElementById("skills").value;
+      let interviewdate = document.getElementById("interviewdate").value;
+      let numberofposts = document.getElementById("numberofposts").value;
+
+      fetch("/jobs/" + sno, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          jobtitle: jobtitle,
+          company: company,
+          location: locationVal,
+          salary: salary,
+          skills: skills,
+          interviewdate: interviewdate,
+          numberofposts: numberofposts
+        })
+      })
+      .then(response => {
+        if (response.ok) return response.text();
+        return response.text().then(message => { throw new Error(message); });
+      })
+      .then(message => {
+        alert(message);
+        location.href = "index.html";
+      })
+      .catch(error => {
+        alert(error.message);
+      });
+    }
+
+    // Compatibility alias for lab tests
+    function updateStudent() {
+      updateJob();
+    }
+  </script>
+</body>
+</html>

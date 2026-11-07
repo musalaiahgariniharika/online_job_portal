@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Job Portal - Find Your Dream Job</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- STICKY NAVBAR -->
+  <nav class="navbar-sticky">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <span>Job<span class="brand-highlight">Portal</span></span>
+      </a>
+
+      <button class="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="list.html">Jobs</a></li>
+        <li><a href="listOne.html">Search Job</a></li>
+        <li><a href="insert.html">Add Job</a></li>
+        <li><a href="update.html">Update Job</a></li>
+        <li><a href="delete.html">Delete Job</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          <span>India's #1 Career & Hiring Platform</span>
+        </div>
+        <h1 class="hero-title">
+          Find Your <br><span class="gradient-text">Dream Job</span> Today
+        </h1>
+        <p class="hero-subtitle">
+          Search thousands of jobs from India's top companies. Connecting top talent with leading enterprises and high-growth startups.
+        </p>
+
+        <!-- LARGE SEARCH BOX -->
+        <div class="hero-search-box">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="quickSearchQuery" placeholder="Job title, skills, or company...">
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" id="quickSearchLoc" placeholder="Location (e.g. Bangalore, Hyderabad)">
+          </div>
+          <button onclick="handleHeroSearch()" class="btn btn-lg">
+            Search Jobs
+          </button>
+        </div>
+      </div>
+
+      <!-- OFFICE HERO ILLUSTRATION (PURE SVG) -->
+      <div class="hero-image-wrapper">
+        <svg class="hero-illustration" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Office Background Floor & Wall -->
+          <rect x="30" y="80" width="440" height="270" rx="16" fill="#1E293B" stroke="#334155" stroke-width="2"/>
+          <!-- Window with sky & clouds -->
+          <rect x="60" y="105" width="100" height="70" rx="8" fill="#0F172A" stroke="#2563EB" stroke-width="2"/>
+          <line x1="110" y1="105" x2="110" y2="175" stroke="#2563EB" stroke-width="2"/>
+          <line x1="60" y1="140" x2="160" y2="140" stroke="#2563EB" stroke-width="2"/>
+          <!-- Wall analytics board -->
+          <rect x="180" y="105" width="140" height="75" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+          <line x1="195" y1="160" x2="225" y2="135" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+          <line x1="225" y1="135" x2="255" y2="148" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+          <line x1="255" y1="148" x2="300" y2="120" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="300" cy="120" r="4" fill="#10B981"/>
+          <!-- Office Desk -->
+          <rect x="70" y="240" width="360" height="20" rx="4" fill="#3B82F6"/>
+          <rect x="100" y="260" width="14" height="70" fill="#1E40AF"/>
+          <rect x="386" y="260" width="14" height="70" fill="#1E40AF"/>
+          <!-- Laptop -->
+          <rect x="200" y="195" width="80" height="45" rx="4" fill="#0F172A" stroke="#60A5FA" stroke-width="2"/>
+          <polygon points="185,240 295,240 280,245 200,245" fill="#94A3B8"/>
+          <!-- Screen code lines -->
+          <line x1="210" y1="208" x2="245" y2="208" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
+          <line x1="210" y1="216" x2="265" y2="216" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+          <line x1="210" y1="224" x2="235" y2="224" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+          <!-- Coffee Mug -->
+          <rect x="305" y="222" width="16" height="18" rx="2" fill="#F8FAFC"/>
+          <path d="M321 226 C326 226, 326 234, 321 234" stroke="#F8FAFC" stroke-width="2" fill="none"/>
+          <!-- Office Plant -->
+          <rect x="340" y="215" width="22" height="25" rx="3" fill="#D97706"/>
+          <ellipse cx="351" cy="205" rx="14" ry="12" fill="#10B981"/>
+          <ellipse cx="343" cy="195" rx="10" ry="8" fill="#34D399"/>
+          <!-- Ergonomic Office Chair -->
+          <ellipse cx="240" cy="275" rx="32" ry="10" fill="#0F172A"/>
+          <rect x="236" y="285" width="8" height="40" fill="#475569"/>
+          <line x1="215" y1="325" x2="265" y2="325" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATISTICS SECTION -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <h3>25,000+</h3>
+          <p>Active Verified Jobs</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <h3>1,200+</h3>
+          <p>Partner Companies</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <h3>50,000+</h3>
+          <p>Candidates Placed</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <h3>98.4%</h3>
+          <p>Hiring Success Rate</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK ACTION / CRUD MANAGEMENT MODULES -->
+  <section class="section-wrapper">
+    <div class="section-header">
+      <span class="section-badge">Job Management System</span>
+      <h2 class="section-title">Manage Job Listings & Opportunities</h2>
+      <p class="section-subtitle">Effortlessly access, search, publish, update, and manage career openings.</p>
+    </div>
+
+    <div class="portal-actions-grid">
+      <div class="action-card" onclick="location.href='list.html'">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </div>
+        <h4>1. List Jobs</h4>
+        <p>Browse all openings</p>
+      </div>
+
+      <div class="action-card" onclick="location.href='listOne.html'">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <h4>2. Search Job</h4>
+        <p>Find specific Job ID</p>
+      </div>
+
+      <div class="action-card" onclick="location.href='insert.html'">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </div>
+        <h4>3. Add Job</h4>
+        <p>Post a new opening</p>
+      </div>
+
+      <div class="action-card" onclick="location.href='update.html'">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </div>
+        <h4>4. Update Job</h4>
+        <p>Edit existing details</p>
+      </div>
+
+      <div class="action-card" onclick="location.href='delete.html'">
+        <div class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </div>
+        <h4>5. Delete Job</h4>
+        <p>Remove filled positions</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED COMPANIES SECTION -->
+  <section class="section-wrapper">
+    <div class="section-header">
+      <span class="section-badge">Top Employers</span>
+      <h2 class="section-title">Work With India's Leading Companies</h2>
+      <p class="section-subtitle">Explore open positions from Fortune 500 corporations and global tech leaders.</p>
+    </div>
+
+    <div class="companies-grid">
+      <!-- Google -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+        </div>
+        <h4 class="company-name">Google</h4>
+        <span class="company-type">Technology • Cloud • AI</span>
+        <span class="company-jobs-count">120+ Openings</span>
+      </div>
+
+      <!-- Microsoft -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+            <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
+            <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
+            <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
+          </svg>
+        </div>
+        <h4 class="company-name">Microsoft</h4>
+        <span class="company-type">Software • Enterprise • AI</span>
+        <span class="company-jobs-count">95+ Openings</span>
+      </div>
+
+      <!-- Amazon -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <path fill="#FF9900" d="M14.6 15.3c-2.4 1.8-6 2.7-9 2.7-4.2 0-8-1.5-10.9-4-.2-.2-.2-.5 0-.7.3-.3.6-.3.8-.1 2.7 2.3 6.1 3.7 10 3.7 2.7 0 5.8-.8 8-2.3.4-.3.9 0 .8.5-.1.3-.4.7-.7.9z"/>
+            <path fill="#232F3E" d="M18.8 17.5c-.3-.4-2-.2-2.8-.1-.2 0-.3-.2-.1-.3 1.2-.9 3.2-.6 3.5-.2.3.4 0 2.4-1.2 3.4-.2.1-.3 0-.3-.2.3-.7.9-2.2.9-2.6z"/>
+          </svg>
+        </div>
+        <h4 class="company-name">Amazon</h4>
+        <span class="company-type">E-Commerce • AWS • Tech</span>
+        <span class="company-jobs-count">150+ Openings</span>
+      </div>
+
+      <!-- Infosys -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <rect width="24" height="24" rx="4" fill="#007CC3"/>
+            <text x="12" y="16" fill="#FFFFFF" font-size="10" font-weight="bold" text-anchor="middle">INFY</text>
+          </svg>
+        </div>
+        <h4 class="company-name">Infosys</h4>
+        <span class="company-type">IT Services • Consulting</span>
+        <span class="company-jobs-count">210+ Openings</span>
+      </div>
+
+      <!-- TCS -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <rect width="24" height="24" rx="4" fill="#0F172A"/>
+            <text x="12" y="16" fill="#38BDF8" font-size="10" font-weight="bold" text-anchor="middle">TCS</text>
+          </svg>
+        </div>
+        <h4 class="company-name">TCS</h4>
+        <span class="company-type">IT Consulting & Software</span>
+        <span class="company-jobs-count">340+ Openings</span>
+      </div>
+
+      <!-- Wipro -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#10B981"/>
+            <text x="12" y="16" fill="#FFFFFF" font-size="9" font-weight="bold" text-anchor="middle">WIPRO</text>
+          </svg>
+        </div>
+        <h4 class="company-name">Wipro</h4>
+        <span class="company-type">Global Information Tech</span>
+        <span class="company-jobs-count">180+ Openings</span>
+      </div>
+
+      <!-- Accenture -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <rect width="24" height="24" rx="4" fill="#A100FF"/>
+            <text x="12" y="16" fill="#FFFFFF" font-size="14" font-weight="bold" text-anchor="middle">&gt;</text>
+          </svg>
+        </div>
+        <h4 class="company-name">Accenture</h4>
+        <span class="company-type">Strategy • Consulting • Tech</span>
+        <span class="company-jobs-count">195+ Openings</span>
+      </div>
+
+      <!-- Cognizant -->
+      <div class="company-card">
+        <div class="company-logo-badge">
+          <svg viewBox="0 0 24 24">
+            <rect width="24" height="24" rx="4" fill="#0033A0"/>
+            <text x="12" y="16" fill="#FFFFFF" font-size="9" font-weight="bold" text-anchor="middle">CTS</text>
+          </svg>
+        </div>
+        <h4 class="company-name">Cognizant</h4>
+        <span class="company-type">Digital Operations & IT</span>
+        <span class="company-jobs-count">130+ Openings</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED LIVE JOBS SECTION -->
+  <section class="section-wrapper">
+    <div class="section-header">
+      <span class="section-badge">Latest Listings</span>
+      <h2 class="section-title">Featured Career Opportunities</h2>
+      <p class="section-subtitle">Real-time job postings with competitive salaries and scheduled interviews.</p>
+    </div>
+
+    <div class="jobs-cards-grid" id="featuredJobsContainer">
+      <!-- Dynamically loaded from /jobs -->
+      <p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Loading latest jobs...</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+      <button onclick="location.href='list.html'" class="btn btn-outline btn-lg">
+        View All Jobs in Table
+      </button>
+    </div>
+  </section>
+
+  <!-- PROFESSIONAL FOOTER -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          JobPortal
+        </h3>
+        <p>
+          Transforming careers and hiring across India. Search thousands of verified openings, connect with top employers, and advance your professional journey.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="list.html">All Jobs</a></li>
+          <li><a href="listOne.html">Search Job</a></li>
+          <li><a href="insert.html">Post a Job</a></li>
+          <li><a href="update.html">Update Job</a></li>
+          <li><a href="delete.html">Delete Job</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Job Categories</h4>
+        <ul>
+          <li><a href="list.html">Software Engineering</a></li>
+          <li><a href="list.html">Web Development</a></li>
+          <li><a href="list.html">UI / UX Design</a></li>
+          <li><a href="list.html">Data & Python</a></li>
+          <li><a href="list.html">Cloud & DevOps</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact & Connect</h4>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <span>support@jobportal.in</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>Cyber Gateway, Hyderabad, India</span>
+        </div>
+
+        <div class="footer-social-links">
+          <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-icon-btn" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </a>
+          <a href="https://github.com" target="_blank" rel="noopener" class="social-icon-btn" aria-label="GitHub">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Online Job Portal. All rights reserved.</p>
+      <p>Built with Pure HTML, CSS & JavaScript</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileNav() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("open");
+    }
+
+    function handleHeroSearch() {
+      const q = document.getElementById("quickSearchQuery").value.trim();
+      const loc = document.getElementById("quickSearchLoc").value.trim();
+      if (q || loc) {
+        location.href = "list.html";
+      } else {
+        location.href = "list.html";
+      }
+    }
+
+    // Load featured jobs into modern cards
+    loadFeaturedJobs();
+
+    function loadFeaturedJobs() {
+      fetch("/jobs")
+        .then(response => response.json())
+        .then(jobs => {
+          const container = document.getElementById("featuredJobsContainer");
+          if (!jobs || jobs.length === 0) {
+            container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">No jobs currently posted. Be the first to add one!</p>';
+            return;
+          }
+
+          container.innerHTML = "";
+          jobs.slice(0, 6).forEach(job => {
+            const formattedSalary = parseFloat(job.salary || 0).toLocaleString("en-IN", {
+              style: "currency",
+              currency: "INR",
+              maximumFractionDigits: 0
+            });
+
+            const skillsHtml = (job.skills || "")
+              .split(",")
+              .map(s => s.trim())
+              .filter(s => s.length > 0)
+              .map(s => `<span class="skill-chip">${s}</span>`)
+              .join(" ");
+
+            const card = document.createElement("div");
+            card.className = "job-card";
+            card.innerHTML = `
+              <div>
+                <div class="job-card-header">
+                  <div class="job-role-info">
+                    <h4>${job.jobtitle}</h4>
+                    <span class="job-company-tag">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                      </svg>
+                      ${job.company}
+                    </span>
+                  </div>
+                  <span class="job-id-pill">ID: ${job.jobid}</span>
+                </div>
+
+                <div class="job-details-list">
+                  <div class="job-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>${job.location || 'Pan India'}</span>
+                  </div>
+
+                  <div class="job-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Interview: ${job.interviewdate || 'Scheduled'}</span>
+                  </div>
+
+                  <div class="job-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                    <span>${job.numberofposts} Posts Open</span>
+                  </div>
+
+                  <div class="job-detail-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>Full Time</span>
+                  </div>
+                </div>
+
+                <div class="job-skills-tags">
+                  ${skillsHtml || '<span class="skill-chip">General</span>'}
+                </div>
+              </div>
+
+              <div class="job-card-footer">
+                <div>
+                  <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Salary (CTC)</span>
+                  <span class="job-salary-badge">${formattedSalary}</span>
+                </div>
+                <button onclick="location.href='listOne.html'" class="btn btn-sm">
+                  View Details
+                </button>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        })
+        .catch(err => {
+          console.error("Error fetching jobs:", err);
+          const container = document.getElementById("featuredJobsContainer");
+          container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Failed to load jobs from server.</p>';
+        });
+    }
+  </script>
+</body>
+</html>

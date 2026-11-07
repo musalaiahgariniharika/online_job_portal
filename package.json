@@ -1,0 +1,16 @@
+{
+  "name": "apartment-visitor-management",
+  "version": "1.0.0",
+  "description": "Apartment Visitor Management System with Node.js, Express, and MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node scripts/init_db.js",
+    "test": "node tests/system_test.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  }
+}

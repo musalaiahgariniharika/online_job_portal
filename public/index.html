@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APARTMENT VISITOR MANAGEMENT SYSTEM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Mobile Overlay -->
+  <div id="mobileOverlay" class="mobile-overlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-building-shield"></i>
+        </div>
+        <div class="brand-text">
+          <h2>AVMS Portal</h2>
+          <span>Smart Community Security</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MAIN MENU</div>
+        <button class="nav-item active" data-view="dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-item" data-view="residents">
+          <i class="fa-solid fa-people-roof"></i>
+          <span>Residents Management</span>
+        </button>
+
+        <button class="nav-item" data-view="visitors">
+          <i class="fa-solid fa-id-card-clip"></i>
+          <span>Visitors Management</span>
+        </button>
+
+        <button class="nav-item" data-view="visits">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Visits Management</span>
+        </button>
+
+        <div class="nav-section-label">GATE OPERATIONS</div>
+        <button class="nav-item highlight-entry" data-view="entry">
+          <i class="fa-solid fa-door-open"></i>
+          <span>Visitor Entry</span>
+          <span class="badge badge-green">IN</span>
+        </button>
+
+        <button class="nav-item highlight-exit" data-view="exit">
+          <i class="fa-solid fa-door-closed"></i>
+          <span>Visitor Exit</span>
+          <span class="badge badge-amber" id="sidebarInsideBadge">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <span class="status-indicator online"></span>
+          <div class="status-info">
+            <p class="status-title">MySQL Server</p>
+            <p class="status-desc" id="dbStatusText">Connected</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      <!-- Top Navigation Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-titles">
+            <h1 id="pageTitle">Dashboard Overview</h1>
+            <p id="pageSubtitle">Real-time statistics and apartment security control</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="live-clock" id="liveClock">
+            <i class="fa-regular fa-clock"></i>
+            <span id="currentTime">--:--:--</span>
+          </div>
+
+          <button class="btn btn-primary" onclick="app.showModal('modalVisitorEntry')">
+            <i class="fa-solid fa-plus"></i>
+            <span>Quick Check-In</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <div class="content-body">
+
+        <!-- ============================================ -->
+        <!-- VIEW 1: DASHBOARD -->
+        <!-- ============================================ -->
+        <section id="view-dashboard" class="page-view active">
+          <!-- KPI Cards Grid -->
+          <div class="stats-grid">
+            <div class="stat-card" style="--accent-color: #4f46e5;">
+              <div class="stat-icon bg-indigo-light">
+                <i class="fa-solid fa-people-roof text-indigo"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Total Residents</span>
+                <h3 class="stat-value" id="kpiTotalResidents">0</h3>
+                <span class="stat-sub">Across all wings</span>
+              </div>
+            </div>
+
+            <div class="stat-card" style="--accent-color: #06b6d4;">
+              <div class="stat-icon bg-cyan-light">
+                <i class="fa-solid fa-address-book text-cyan"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Registered Visitors</span>
+                <h3 class="stat-value" id="kpiTotalVisitors">0</h3>
+                <span class="stat-sub">In database records</span>
+              </div>
+            </div>
+
+            <div class="stat-card" style="--accent-color: #10b981;">
+              <div class="stat-icon bg-emerald-light">
+                <i class="fa-solid fa-person-walking-arrow-right text-emerald"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Currently Inside</span>
+                <h3 class="stat-value" id="kpiInsideVisitors">0</h3>
+                <span class="stat-sub text-emerald"><i class="fa-solid fa-arrow-trend-up"></i> Active on premises</span>
+              </div>
+            </div>
+
+            <div class="stat-card" style="--accent-color: #8b5cf6;">
+              <div class="stat-icon bg-purple-light">
+                <i class="fa-solid fa-check-double text-purple"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Completed Visits</span>
+                <h3 class="stat-value" id="kpiCompletedVisits">0</h3>
+                <span class="stat-sub">Logged out safely</span>
+              </div>
+            </div>
+
+            <div class="stat-card" style="--accent-color: #f59e0b;">
+              <div class="stat-icon bg-amber-light">
+                <i class="fa-solid fa-list-check text-amber"></i>
+              </div>
+              <div class="stat-content">
+                <span class="stat-label">Total Visits Logged</span>
+                <h3 class="stat-value" id="kpiTotalVisits">0</h3>
+                <span class="stat-sub">Cumulative history</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Recent Activity -->
+          <div class="dashboard-grid">
+            <!-- Recent Activity Table Card -->
+            <div class="card recent-activity-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Recent Visitor Activity</h3>
+                  <p class="card-subtitle">Real-time gate logs with resident and visitor details</p>
+                </div>
+                <div class="card-actions">
+                  <button class="btn btn-outline btn-sm" onclick="app.loadDashboard()">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                  </button>
+                  <button class="btn btn-secondary btn-sm" onclick="app.switchView('visits')">
+                    View All Logs
+                  </button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Visit ID</th>
+                      <th>Visitor Name</th>
+                      <th>Resident & Flat</th>
+                      <th>Purpose / Vehicle</th>
+                      <th>Entry Time</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardRecentVisitsBody">
+                    <tr>
+                      <td colspan="7" class="text-center py-4 text-muted">Loading live activity...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Quick Action Hub -->
+            <div class="quick-action-hub">
+              <div class="card action-banner">
+                <div class="action-banner-icon">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Gate Control Hub</h3>
+                <p>Register entries, clear departing guests, or manage residents with quick shortcuts.</p>
+                <div class="action-buttons-stack">
+                  <button class="btn btn-primary w-full" onclick="app.switchView('entry')">
+                    <i class="fa-solid fa-door-open"></i> Record Visitor Entry
+                  </button>
+                  <button class="btn btn-warning w-full" onclick="app.switchView('exit')">
+                    <i class="fa-solid fa-door-closed"></i> Quick Visitor Exit
+                  </button>
+                  <button class="btn btn-outline w-full" onclick="app.showModal('modalResident')">
+                    <i class="fa-solid fa-user-plus"></i> Add New Resident
+                  </button>
+                  <button class="btn btn-outline w-full" onclick="app.showModal('modalVisitor')">
+                    <i class="fa-solid fa-id-badge"></i> Pre-Register Visitor
+                  </button>
+                </div>
+              </div>
+
+              <!-- Inside Summary Card -->
+              <div class="card inside-summary-card">
+                <div class="card-header">
+                  <h4 class="card-title">Inside Right Now</h4>
+                  <span class="badge badge-green" id="dashInsideBadge">0 Active</span>
+                </div>
+                <div class="inside-mini-list" id="dashboardInsideMiniList">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- VIEW 2: RESIDENTS MANAGEMENT -->
+        <!-- ============================================ -->
+        <section id="view-residents" class="page-view">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Residents Directory</h3>
+                <p class="card-subtitle">Manage registered flat owners, tenants, and contact details</p>
+              </div>
+              <button class="btn btn-primary" onclick="app.openResidentModal()">
+                <i class="fa-solid fa-plus"></i> Add New Resident
+              </button>
+            </div>
+
+            <!-- Filter & Search Toolbar -->
+            <div class="table-toolbar">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchResidents" placeholder="Search by name, flat number, phone, email..." oninput="app.searchResidentsDebounced()">
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.loadResidents()">
+                <i class="fa-solid fa-rotate"></i> Reset
+              </button>
+            </div>
+
+            <!-- Residents Table -->
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Resident Name</th>
+                    <th>Flat No</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Total Visits</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="residentsTableBody">
+                  <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">Loading residents...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- VIEW 3: VISITORS MANAGEMENT -->
+        <!-- ============================================ -->
+        <section id="view-visitors" class="page-view">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Visitors Directory</h3>
+                <p class="card-subtitle">Manage known guests, delivery personnel, and contractors</p>
+              </div>
+              <button class="btn btn-primary" onclick="app.openVisitorModal()">
+                <i class="fa-solid fa-plus"></i> Register New Visitor
+              </button>
+            </div>
+
+            <!-- Filter & Search Toolbar -->
+            <div class="table-toolbar">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchVisitors" placeholder="Search by name, phone, vehicle, purpose..." oninput="app.searchVisitorsDebounced()">
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.loadVisitors()">
+                <i class="fa-solid fa-rotate"></i> Reset
+              </button>
+            </div>
+
+            <!-- Visitors Table -->
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Visitor Name</th>
+                    <th>Phone</th>
+                    <th>Vehicle No</th>
+                    <th>Purpose</th>
+                    <th>Visit History</th>
+                    <th>Status</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="visitorsTableBody">
+                  <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">Loading visitors...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- VIEW 4: VISITS MANAGEMENT -->
+        <!-- ============================================ -->
+        <section id="view-visits" class="page-view">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">All Visit Records</h3>
+                <p class="card-subtitle">Complete chronological history of entry and exit events</p>
+              </div>
+              <button class="btn btn-primary" onclick="app.switchView('entry')">
+                <i class="fa-solid fa-plus"></i> Log New Visit
+              </button>
+            </div>
+
+            <!-- Filter & Search Toolbar -->
+            <div class="table-toolbar">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchVisits" placeholder="Search visits by visitor, resident, flat, vehicle, purpose..." oninput="app.searchVisitsDebounced()">
+              </div>
+              <div class="filter-group">
+                <label for="filterVisitStatus">Status:</label>
+                <select id="filterVisitStatus" onchange="app.loadVisits()">
+                  <option value="All">All Statuses</option>
+                  <option value="Inside">Inside Premises</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.loadVisits()">
+                <i class="fa-solid fa-rotate"></i> Refresh
+              </button>
+            </div>
+
+            <!-- Visits Table -->
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Visit ID</th>
+                    <th>Visitor Info</th>
+                    <th>Host Resident & Flat</th>
+                    <th>Purpose & Vehicle</th>
+                    <th>Entry Timestamp</th>
+                    <th>Exit Timestamp</th>
+                    <th>Status</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="visitsTableBody">
+                  <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">Loading visit logs...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- VIEW 5: VISITOR ENTRY -->
+        <!-- ============================================ -->
+        <section id="view-entry" class="page-view">
+          <div class="entry-layout">
+            <div class="card entry-card">
+              <div class="card-header border-bottom">
+                <div class="header-icon-title">
+                  <div class="icon-circle bg-emerald-light text-emerald">
+                    <i class="fa-solid fa-door-open"></i>
+                  </div>
+                  <div>
+                    <h3 class="card-title">Visitor Entry Check-In</h3>
+                    <p class="card-subtitle">Authorize and log visitor entry with automated timestamping</p>
+                  </div>
+                </div>
+              </div>
+
+              <form id="formVisitorEntry" onsubmit="app.handleEntrySubmit(event)" class="form-body">
+                <!-- Select Existing or New Visitor Switch -->
+                <div class="form-group-radio">
+                  <label class="radio-label">
+                    <input type="radio" name="visitorType" value="existing" checked onchange="app.toggleVisitorEntryType()">
+                    <span>Select Existing Visitor</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="visitorType" value="new" onchange="app.toggleVisitorEntryType()">
+                    <span>New / First-Time Visitor</span>
+                  </label>
+                </div>
+
+                <!-- Existing Visitor Dropdown -->
+                <div id="groupExistingVisitor" class="form-group">
+                  <label for="entryVisitorSelect">Select Registered Visitor <span class="required">*</span></label>
+                  <select id="entryVisitorSelect" class="form-control" onchange="app.handleVisitorSelectChange()">
+                    <option value="">-- Choose a Visitor --</option>
+                  </select>
+                </div>
+
+                <!-- New Visitor Fields (Hidden by default) -->
+                <div id="groupNewVisitor" class="form-row hidden">
+                  <div class="form-group col-md-6">
+                    <label for="entryNewName">Visitor Full Name <span class="required">*</span></label>
+                    <input type="text" id="entryNewName" class="form-control" placeholder="e.g. Rahul Sharma">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="entryNewPhone">Phone Number</label>
+                    <input type="tel" id="entryNewPhone" class="form-control" placeholder="e.g. 9876543210">
+                  </div>
+                </div>
+
+                <!-- Resident Host Selection -->
+                <div class="form-group">
+                  <label for="entryResidentSelect">Host Resident / Flat to Visit <span class="required">*</span></label>
+                  <select id="entryResidentSelect" class="form-control" required>
+                    <option value="">-- Choose Resident Flat --</option>
+                  </select>
+                </div>
+
+                <!-- Vehicle & Purpose -->
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="entryVehicleNo">Vehicle Number (Optional)</label>
+                    <input type="text" id="entryVehicleNo" class="form-control" placeholder="e.g. MH-02-AB-1234">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="entryPurpose">Purpose of Visit <span class="required">*</span></label>
+                    <input type="text" id="entryPurpose" class="form-control" placeholder="e.g. Delivery, Guest, Maintenance" required>
+                  </div>
+                </div>
+
+                <!-- Entry Time -->
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="entryTime">Entry Date & Time</label>
+                    <input type="datetime-local" id="entryTime" class="form-control">
+                    <small class="form-hint">Leave blank to automatically record current date & time</small>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Initial Status</label>
+                    <input type="text" class="form-control" value="Inside (Active)" readonly disabled>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa-solid fa-circle-check"></i> Grant Entry & Record Visit
+                  </button>
+                  <button type="button" class="btn btn-outline" onclick="app.resetEntryForm()">
+                    Reset Form
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Guidelines / Live Inside Sidebar -->
+            <div class="entry-sidebar">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title"><i class="fa-solid fa-circle-info text-indigo"></i> Check-in Protocol</h4>
+                </div>
+                <ul class="checklist">
+                  <li><i class="fa-solid fa-check text-emerald"></i> Verify visitor identity or credentials.</li>
+                  <li><i class="fa-solid fa-check text-emerald"></i> Confirm host resident apartment number.</li>
+                  <li><i class="fa-solid fa-check text-emerald"></i> Record delivery package or vehicle number if applicable.</li>
+                  <li><i class="fa-solid fa-check text-emerald"></i> System automatically alerts and creates live record.</li>
+                </ul>
+              </div>
+
+              <div class="card mt-4">
+                <div class="card-header">
+                  <h4 class="card-title">Quick Switch</h4>
+                </div>
+                <p class="text-muted text-sm">Need to log an exit instead?</p>
+                <button class="btn btn-warning w-full mt-2" onclick="app.switchView('exit')">
+                  <i class="fa-solid fa-door-closed"></i> Open Visitor Exit Desk
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- VIEW 6: VISITOR EXIT -->
+        <!-- ============================================ -->
+        <section id="view-exit" class="page-view">
+          <div class="card">
+            <div class="card-header">
+              <div class="header-icon-title">
+                <div class="icon-circle bg-amber-light text-amber">
+                  <i class="fa-solid fa-door-closed"></i>
+                </div>
+                <div>
+                  <h3 class="card-title">Visitor Exit & Check-Out Desk</h3>
+                  <p class="card-subtitle">List of all visitors currently inside premises. One-click checkout logs exit time and marks visit completed.</p>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.loadExitView()">
+                <i class="fa-solid fa-rotate"></i> Refresh Inside List
+              </button>
+            </div>
+
+            <!-- Filter Toolbar -->
+            <div class="table-toolbar">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchExitInside" placeholder="Filter active visitors by name, flat, vehicle, purpose..." oninput="app.filterExitTable()">
+              </div>
+              <div class="inside-counter-badge">
+                <span class="pulse-dot"></span>
+                <span>Active Inside: <strong id="exitCountBadge">0</strong></span>
+              </div>
+            </div>
+
+            <!-- Inside Visitors Table -->
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Visit ID</th>
+                    <th>Visitor Name & Phone</th>
+                    <th>Visited Flat & Resident</th>
+                    <th>Vehicle No</th>
+                    <th>Purpose</th>
+                    <th>Entry Timestamp</th>
+                    <th>Time Elapsed</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="exitTableBody">
+                  <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">Loading currently inside visitors...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL: ADD / EDIT RESIDENT -->
+  <!-- ============================================ -->
+  <div id="modalResident" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalResidentTitle">Add New Resident</h3>
+        <button class="modal-close-btn" onclick="app.closeModal('modalResident')">&times;</button>
+      </div>
+      <form id="formResident" onsubmit="app.handleResidentSubmit(event)">
+        <input type="hidden" id="residentId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="residentName">Full Name <span class="required">*</span></label>
+            <input type="text" id="residentName" class="form-control" placeholder="e.g. Rajesh Sharma" required>
+          </div>
+          <div class="form-group">
+            <label for="residentFlat">Flat Number <span class="required">*</span></label>
+            <input type="text" id="residentFlat" class="form-control" placeholder="e.g. A-101, B-204" required>
+          </div>
+          <div class="form-group">
+            <label for="residentPhone">Phone Number</label>
+            <input type="tel" id="residentPhone" class="form-control" placeholder="e.g. 9876543210">
+          </div>
+          <div class="form-group">
+            <label for="residentEmail">Email Address</label>
+            <input type="email" id="residentEmail" class="form-control" placeholder="e.g. rajesh@example.com">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="app.closeModal('modalResident')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveResident">Save Resident</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL: ADD / EDIT VISITOR -->
+  <!-- ============================================ -->
+  <div id="modalVisitor" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalVisitorTitle">Register New Visitor</h3>
+        <button class="modal-close-btn" onclick="app.closeModal('modalVisitor')">&times;</button>
+      </div>
+      <form id="formVisitor" onsubmit="app.handleVisitorSubmit(event)">
+        <input type="hidden" id="visitorId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="visitorName">Visitor Full Name <span class="required">*</span></label>
+            <input type="text" id="visitorName" class="form-control" placeholder="e.g. Karan Mehta" required>
+          </div>
+          <div class="form-group">
+            <label for="visitorPhone">Phone Number</label>
+            <input type="tel" id="visitorPhone" class="form-control" placeholder="e.g. 9123456780">
+          </div>
+          <div class="form-group">
+            <label for="visitorVehicle">Vehicle Number</label>
+            <input type="text" id="visitorVehicle" class="form-control" placeholder="e.g. MH-02-AB-1234">
+          </div>
+          <div class="form-group">
+            <label for="visitorPurpose">General Purpose</label>
+            <input type="text" id="visitorPurpose" class="form-control" placeholder="e.g. Guest / Courier / Maintenance">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="app.closeModal('modalVisitor')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveVisitor">Save Visitor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL: QUICK ENTRY / CHECK-IN MODAL SHORTCUT -->
+  <!-- ============================================ -->
+  <div id="modalVisitorEntry" class="modal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3>Quick Visitor Check-In</h3>
+        <button class="modal-close-btn" onclick="app.closeModal('modalVisitorEntry')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted mb-3">Authorize gate entry directly from this quick dialog:</p>
+        <form id="formModalVisitorEntry" onsubmit="app.handleModalEntrySubmit(event)">
+          <div class="form-group">
+            <label for="modalEntryResidentSelect">Select Host Resident & Flat <span class="required">*</span></label>
+            <select id="modalEntryResidentSelect" class="form-control" required>
+              <option value="">-- Choose Resident --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="modalEntryVisitorSelect">Select Existing Visitor or Type New</label>
+            <select id="modalEntryVisitorSelect" class="form-control">
+              <option value="">-- Choose Existing Visitor (Or fill below) --</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="modalEntryVisitorName">Visitor Name (If New)</label>
+              <input type="text" id="modalEntryVisitorName" class="form-control" placeholder="Full name">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="modalEntryVisitorPhone">Phone</label>
+              <input type="tel" id="modalEntryVisitorPhone" class="form-control" placeholder="Contact number">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="modalEntryVehicle">Vehicle No</label>
+              <input type="text" id="modalEntryVehicle" class="form-control" placeholder="Optional">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="modalEntryPurpose">Purpose <span class="required">*</span></label>
+              <input type="text" id="modalEntryPurpose" class="form-control" placeholder="e.g. Courier, Friend" required>
+            </div>
+          </div>
+          <div class="modal-footer px-0 pb-0">
+            <button type="button" class="btn btn-outline" onclick="app.closeModal('modalVisitorEntry')">Cancel</button>
+            <button type="submit" class="btn btn-success">
+              <i class="fa-solid fa-door-open"></i> Complete Check-In
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL: EDIT VISIT RECORD -->
+  <!-- ============================================ -->
+  <div id="modalEditVisit" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Visit Record</h3>
+        <button class="modal-close-btn" onclick="app.closeModal('modalEditVisit')">&times;</button>
+      </div>
+      <form id="formEditVisit" onsubmit="app.handleEditVisitSubmit(event)">
+        <input type="hidden" id="editVisitId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="editVisitResident">Host Resident <span class="required">*</span></label>
+            <select id="editVisitResident" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label for="editVisitVisitor">Visitor <span class="required">*</span></label>
+            <select id="editVisitVisitor" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label for="editVisitEntryTime">Entry Time <span class="required">*</span></label>
+            <input type="datetime-local" id="editVisitEntryTime" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="editVisitExitTime">Exit Time (Leave empty if Inside)</label>
+            <input type="datetime-local" id="editVisitExitTime" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="editVisitStatus">Status</label>
+            <select id="editVisitStatus" class="form-control">
+              <option value="Inside">Inside</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="app.closeModal('modalEditVisit')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Visit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL: VIEW DETAILS (RESIDENT / VISITOR) -->
+  <!-- ============================================ -->
+  <div id="modalDetails" class="modal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3 id="modalDetailsTitle">Record Details</h3>
+        <button class="modal-close-btn" onclick="app.closeModal('modalDetails')">&times;</button>
+      </div>
+      <div class="modal-body" id="modalDetailsContent">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="app.closeModal('modalDetails')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODAL: CONFIRM DELETION -->
+  <!-- ============================================ -->
+  <div id="modalConfirmDelete" class="modal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h3 class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Confirm Delete</h3>
+        <button class="modal-close-btn" onclick="app.closeModal('modalConfirmDelete')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="deleteConfirmMessage">Are you sure you want to delete this record? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="app.closeModal('modalConfirmDelete')">Cancel</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmDeleteAction">Delete Record</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
